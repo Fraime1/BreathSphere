@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/breath_sphere_graph"
+    app:startDestination="@id/breathSphereLoadFragment">
+
+    <fragment
+        android:id="@+id/breathSphereLoadFragment"
+        android:name="com.breaswl.spexerutil.ieorg.presentation.ui.load.BreathSphereLoadFragment"
+        android:label="BreathSphereLoadFragment" >
+        <action
+            android:id="@+id/action_breathSphereLoadFragment_to_breathSphereV"
+            app:destination="@id/breathSphereV"
+            app:popUpTo="@id/breath_sphere_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/breathSphereV"
+        android:name="com.breaswl.spexerutil.ieorg.presentation.ui.view.BreathSphereV"
+        android:label="BreathSphereV" >
+        <action
+            android:id="@+id/action_breathSphereV_self"
+            app:destination="@id/breathSphereV" />
+    </fragment>
+</navigation>

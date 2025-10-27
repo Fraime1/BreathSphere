@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "176419506098",
+    "project_id": "breathsphere-f6e5a",
+    "storage_bucket": "breathsphere-f6e5a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:176419506098:android:55aabe48b239d8080546ab",
+        "android_client_info": {
+          "package_name": "com.breaswl.spexerutil"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIYmpZHefeHNowT5n0G1fS4WzCMqRMiwQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
