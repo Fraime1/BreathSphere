@@ -10,9 +10,9 @@ class BreathSphereSharedPreference(context: Context) {
         get() = breathSpherePrefs.getString(BREATH_SPHERE_SAVED_URL, "") ?: ""
         set(value) = breathSpherePrefs.edit { putString(BREATH_SPHERE_SAVED_URL, value) }
 
-    var breathSphereExpired : Int
-        get() = breathSpherePrefs.getInt(BREATH_SPHERE_EXPIRED, 0)
-        set(value) = breathSpherePrefs.edit { putInt(BREATH_SPHERE_EXPIRED, value) }
+    var breathSphereExpired : Long
+        get() = breathSpherePrefs.getLong(BREATH_SPHERE_EXPIRED, 0L)
+        set(value) = breathSpherePrefs.edit { putLong(BREATH_SPHERE_EXPIRED, value) }
 
     var breathSphereAppState: Int
         get() = breathSpherePrefs.getInt(BREATH_SPHERE_APPLICATION_STATE, 0)

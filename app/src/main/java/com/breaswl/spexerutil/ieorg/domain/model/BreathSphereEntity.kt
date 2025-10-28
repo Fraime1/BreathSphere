@@ -9,5 +9,5 @@ data class BreathSphereEntity (
     @SerializedName("url")
     val breathSphereUrl: String,
     @SerializedName("expires")
-    val breathSphereExpires: Int,
+    val breathSphereExpires: Long,
 )

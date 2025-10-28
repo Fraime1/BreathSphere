@@ -3,12 +3,14 @@ package com.breaswl.spexerutil.ieorg.presentation.ui.view
 import android.content.DialogInterface
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.CookieManager
 import android.webkit.PermissionRequest
 import android.webkit.ValueCallback
+import android.widget.FrameLayout
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,13 +20,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.breaswl.spexerutil.BreatheSphereActivity
 import com.breaswl.spexerutil.R
+import com.breaswl.spexerutil.ieorg.presentation.app.BreathSphereApp
 import com.breaswl.spexerutil.ieorg.presentation.ui.load.BreathSphereLoadFragment
 import org.koin.android.ext.android.inject
 
 class BreathSphereV : Fragment(){
 
     private val breathSphereDataStore by activityViewModels<BreathSphereDataStore>()
-    private lateinit var breathSphereView: BreathSphereVi
     lateinit var breathSphereRequestFromChrome: PermissionRequest
 
 
@@ -35,13 +37,19 @@ class BreathSphereV : Fragment(){
         requireActivity().onBackPressedDispatcher.addCallback(this,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    if (breathSphereView.canGoBack()) {
-                        breathSphereView.goBack()
+                    if (breathSphereDataStore.breathSphereView.canGoBack()) {
+                        breathSphereDataStore.breathSphereView.goBack()
+                        Log.d(BreathSphereApp.BREATH_SPHERE_MAIN_TAG, "WebView can go back")
                     } else if (breathSphereDataStore.breathSphereViList.size > 1) {
-                        this.isEnabled = false
+                        Log.d(BreathSphereApp.BREATH_SPHERE_MAIN_TAG, "WebView can`t go back")
+//                        this.isEnabled = false
                         breathSphereDataStore.breathSphereViList.removeAt(breathSphereDataStore.breathSphereViList.lastIndex)
-                        breathSphereView.destroy()
-                        requireActivity().onBackPressedDispatcher.onBackPressed()
+                        Log.d(BreathSphereApp.BREATH_SPHERE_MAIN_TAG, "WebView list size ${breathSphereDataStore.breathSphereViList.size}")
+                        breathSphereDataStore.breathSphereView.destroy()
+                        val previousWebView = breathSphereDataStore.breathSphereViList.last()
+                        attachWebViewToContainer(previousWebView)
+                        breathSphereDataStore.breathSphereView = previousWebView
+//                        requireActivity().onBackPressedDispatcher.onBackPressed()
                     }
                 }
 
@@ -53,13 +61,45 @@ class BreathSphereV : Fragment(){
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+        if (breathSphereDataStore.isFirstCreate) {
+            breathSphereDataStore.isFirstCreate = false
+            breathSphereDataStore.containerView = FrameLayout(requireContext()).apply {
+                layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+                id = View.generateViewId()
+            }
+            return breathSphereDataStore.containerView
+        } else {
+            return breathSphereDataStore.containerView
+        }
+//        Log.d(BreathSphereApp.BREATH_SPHERE_MAIN_TAG, "onCreateView")
+//        containerView = FrameLayout(requireContext()).apply {
+//            layoutParams = ViewGroup.LayoutParams(
+//                ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.MATCH_PARENT
+//            )
+//            id = View.generateViewId()
+//        }
+//        return containerView
+//        return breathSphereDataStore.breathSphereView
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        Log.d(BreathSphereApp.BREATH_SPHERE_MAIN_TAG, "onViewCreated")
         if (breathSphereDataStore.breathSphereViList.isEmpty()) {
-            breathSphereView = BreathSphereVi(requireContext(), object :
+            breathSphereDataStore.breathSphereView = BreathSphereVi(requireContext(), object :
                 BreathSphereCallBack {
                 override fun breathSphereHandleCreateWebWindowRequest(breathSphereVi: BreathSphereVi) {
                     breathSphereDataStore.breathSphereViList.add(breathSphereVi)
-                    findNavController().navigate(R.id.action_breathSphereV_self)
+                    Log.d(BreathSphereApp.BREATH_SPHERE_MAIN_TAG, "WebView list size = ${breathSphereDataStore.breathSphereViList.size}")
+                    Log.d(BreathSphereApp.BREATH_SPHERE_MAIN_TAG, "CreateWebWindowRequest")
+                    breathSphereDataStore.breathSphereView = breathSphereVi
+                    attachWebViewToContainer(breathSphereVi)
                 }
 
                 override fun breathSphereOnPermissionRequest(breathSphereRequest: PermissionRequest?) {
@@ -102,13 +142,24 @@ class BreathSphereV : Fragment(){
                 }
 
             }, breathSphereWindow = requireActivity().window)
-            breathSphereView.breathSphereFLoad(arguments?.getString(BreathSphereLoadFragment.BREATH_SPHERE_D) ?: "")
+            breathSphereDataStore.breathSphereView.breathSphereFLoad(arguments?.getString(BreathSphereLoadFragment.BREATH_SPHERE_D) ?: "")
 //            ejvview.fLoad("www.google.com")
-            breathSphereDataStore.breathSphereViList.add(breathSphereView)
+            breathSphereDataStore.breathSphereViList.add(breathSphereDataStore.breathSphereView)
+            attachWebViewToContainer(breathSphereDataStore.breathSphereView)
         } else {
-            breathSphereView = breathSphereDataStore.breathSphereViList.last()
+            breathSphereDataStore.breathSphereView = breathSphereDataStore.breathSphereViList.last()
+            attachWebViewToContainer(breathSphereDataStore.breathSphereView)
         }
-        return breathSphereView
+        Log.d(BreathSphereApp.BREATH_SPHERE_MAIN_TAG, "WebView list size = ${breathSphereDataStore.breathSphereViList.size}")
+    }
+
+    private fun attachWebViewToContainer(w: BreathSphereVi) {
+        breathSphereDataStore.containerView.post {
+            // Убираем предыдущую WebView, если есть
+            (w.parent as? ViewGroup)?.removeView(w)
+            breathSphereDataStore.containerView.removeAllViews()
+            breathSphereDataStore.containerView.addView(w)
+        }
     }
 
 

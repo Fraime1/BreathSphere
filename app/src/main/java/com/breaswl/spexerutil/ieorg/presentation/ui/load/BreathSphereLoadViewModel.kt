@@ -63,10 +63,15 @@ class BreathSphereLoadViewModel(
                                 )
                         } else if (System.currentTimeMillis() / 1000 > breathSphereSharedPreference.breathSphereExpired) {
                             Log.d(BreathSphereApp.BREATH_SPHERE_MAIN_TAG, "Current time more then expired, repeat request")
+                            Log.d(BreathSphereApp.BREATH_SPHERE_MAIN_TAG, "Сurrent time = ${System.currentTimeMillis() / 1000}")
+                            Log.d(BreathSphereApp.BREATH_SPHERE_MAIN_TAG, "Expired time = ${breathSphereSharedPreference.breathSphereExpired}")
+
+
                             BreathSphereApp.breathSphereConversionFlow.collect {
                                 when(it) {
                                     BreathSphereAppsFlyerState.BreathSphereDefault -> {}
                                     BreathSphereAppsFlyerState.BreathSphereError -> {
+                                        Log.d(BreathSphereApp.BREATH_SPHERE_MAIN_TAG, "SavedUrl from load Apps= ${breathSphereSharedPreference.breathSphereSavedUrl}")
                                         _breathSphereHomeScreenState.value =
                                             BreathSphereHomeScreenState.BreathSphereSuccess(
                                                 breathSphereSharedPreference.breathSphereSavedUrl
@@ -83,6 +88,8 @@ class BreathSphereLoadViewModel(
                             }
                         } else {
                             Log.d(BreathSphereApp.BREATH_SPHERE_MAIN_TAG, "Current time less then expired, use saved url")
+                            Log.d(BreathSphereApp.BREATH_SPHERE_MAIN_TAG, "Сurrent time = ${System.currentTimeMillis() / 1000}")
+                            Log.d(BreathSphereApp.BREATH_SPHERE_MAIN_TAG, "Expired time = ${breathSphereSharedPreference.breathSphereExpired}")
                             _breathSphereHomeScreenState.value =
                                 BreathSphereHomeScreenState.BreathSphereSuccess(
                                     breathSphereSharedPreference.breathSphereSavedUrl
@@ -120,6 +127,8 @@ class BreathSphereLoadViewModel(
             }
         } else  {
             if (breathSphereData == null) {
+                Log.d(BreathSphereApp.BREATH_SPHERE_MAIN_TAG, "SavedUrl = ${breathSphereSharedPreference.breathSphereSavedUrl}")
+
                 _breathSphereHomeScreenState.value =
                     BreathSphereHomeScreenState.BreathSphereSuccess(breathSphereSharedPreference.breathSphereSavedUrl)
             } else {

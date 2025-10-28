@@ -55,6 +55,8 @@ class BreathSphereVi(
                 request: WebResourceRequest?,
             ): Boolean {
                 val link = request?.url?.toString() ?: ""
+                Log.d(BreathSphereApp.BREATH_SPHERE_MAIN_TAG, "Url form w = $link")
+
 
                 return if (request?.isRedirect == true) {
                     view?.loadUrl(request?.url.toString())
@@ -77,6 +79,7 @@ class BreathSphereVi(
             override fun onPageFinished(view: WebView?, url: String?) {
                 CookieManager.getInstance().flush()
                 breathSphereCallback.breathSphereOnFirstPageFinished()
+                Log.d(BreathSphereApp.BREATH_SPHERE_MAIN_TAG, "onPageFinished = $url")
                 if (url?.contains("ninecasino") == true) {
                     BreathSphereApp.breathSphereInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
                     Log.d(BreathSphereApp.BREATH_SPHERE_MAIN_TAG, "onPageFinished : ${BreathSphereApp.breathSphereInputMode}")
