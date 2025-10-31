@@ -46,7 +46,7 @@ interface BreathSphereAppsApi {
 }
 class BreathSphereApp : Application() {
 
-    var isResumed = false
+    private var breathSphereIsResumed = false
 
     override fun onCreate() {
         super.onCreate()
@@ -132,19 +132,11 @@ class BreathSphereApp : Application() {
                 )
             )
         }
-//        val breathSphereAppsflyer = BreathSphereAppsflyer(this@BreathSphereApp)
-//        val breathSphereSystemService = BreathSphereSystemService(this)
-//        if (breathSphereSystemService.breathSphereIsOnline()) {
-//            CoroutineScope(Dispatchers.Main).launch {
-//                Log.d(BREATH_SPHERE_MAIN_TAG, "Scope launch")
-//                breathSphereConversionFlow.value = breathSphereAppsflyer.init()
-//            }
-//        }
     }
 
     private fun safeResume(state: BreathSphereAppsFlyerState) {
-        if (!isResumed) {
-            isResumed = true
+        if (!breathSphereIsResumed) {
+            breathSphereIsResumed = true
             breathSphereConversionFlow.value = state
         }
     }

@@ -27,6 +27,12 @@ class BreathSphereVi(
     private val breathSphereCallback: BreathSphereCallBack,
     private val breathSphereWindow: Window
 ) : WebView(breathSphereContext) {
+    private var breathSphereFileChooserHandler: ((ValueCallback<Array<Uri>>?) -> Unit)? = null
+
+    fun breathSphereSetFileChooserHandler(handler: (ValueCallback<Array<Uri>>?) -> Unit) {
+        this.breathSphereFileChooserHandler = handler
+        Log.d(BreathSphereApp.BREATH_SPHERE_MAIN_TAG, "File chooser handler set")
+    }
     init {
         val webSettings = settings
         webSettings.apply {
@@ -104,7 +110,7 @@ class BreathSphereVi(
                 filePathCallback: ValueCallback<Array<Uri>>?,
                 fileChooserParams: WebChromeClient.FileChooserParams?,
             ): Boolean {
-                breathSphereCallback.breathSphereOnShowFileChooser(filePathCallback)
+                breathSphereFileChooserHandler?.invoke(filePathCallback)
                 return true
             }
             override fun onCreateWindow(
@@ -118,6 +124,7 @@ class BreathSphereVi(
             }
         })
     }
+
 
 
     fun breathSphereFLoad(link: String) {

@@ -20,20 +20,6 @@ import com.breaswl.spexerutil.ieorg.presentation.pushhandler.BreathSpherePushHan
 import org.koin.android.ext.android.inject
 
 class BreatheSphereActivity : AppCompatActivity() {
-    lateinit var breathSpherePhoto: Uri
-    var breathSphereFilePathFromChrome: ValueCallback<Array<Uri>>? = null
-
-    val breathSphereTakeFile = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) {
-        breathSphereFilePathFromChrome?.onReceiveValue(arrayOf(it ?: Uri.EMPTY))
-    }
-
-    val breathSphereTakePhoto = registerForActivityResult(ActivityResultContracts.TakePicture()) {
-        if (it) {
-            breathSphereFilePathFromChrome?.onReceiveValue(arrayOf(breathSpherePhoto))
-        } else {
-            breathSphereFilePathFromChrome?.onReceiveValue(null)
-        }
-    }
 
     private val breathSpherePushHandler by inject<BreathSpherePushHandler>()
     override fun onCreate(savedInstanceState: Bundle?) {

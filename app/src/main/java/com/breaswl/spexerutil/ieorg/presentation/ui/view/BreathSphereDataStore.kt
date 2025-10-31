@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class BreathSphereDataStore : ViewModel(){
     val breathSphereViList: MutableList<BreathSphereVi> = mutableListOf()
     private val _breathSphereIsFirstFinishPage: MutableStateFlow<Boolean> = MutableStateFlow(true)
-    var isFirstCreate = true
+    var breathSphereIsFirstCreate = true
     @SuppressLint("StaticFieldLeak")
-    lateinit var containerView: FrameLayout
+    lateinit var breathSphereContainerView: FrameLayout
     @SuppressLint("StaticFieldLeak")
     lateinit var breathSphereView: BreathSphereVi
     fun breathSphereSetIsFirstFinishPage() {
